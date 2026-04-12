@@ -11,8 +11,8 @@ const eventSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().regex(/^\+?[\d\s-]{10,20}$/, "Invalid phone format"),
   event_type: z.string().min(2).max(50),
-  date: z.string().nullable().optional().refine((val) => !val || !isNaN(Date.parse(val)), { message: "Invalid date format" }),
-  guests: z.number().int().min(1).max(1000).nullable().optional(),
+  date: z.string().min(1, "Date is required").refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
+  guests: z.number().int().min(1).max(1000),
   services_requested: z.array(z.string().max(50)).nullable().optional(),
   details: z.string().max(2000).nullable().optional()
 })
@@ -59,7 +59,12 @@ export async function createEventInquiry(formData: FormData) {
     services_requested: validatedFields.data.services_requested ? validatedFields.data.services_requested.map(s => xss(s)) : null,
     details: validatedFields.data.details ? xss(validatedFields.data.details) : null,
     status: 'Pending'
-  }
+  } as const;
+
+  // Since we are using an object literal, we might need to cast or ensure types match exactly
+  // The database type for date is 'string', and validatedFields.data.date is 'string'.
+  // The database type for guests is 'number', and validatedFields.data.guests is 'number'.
+  // The database type for user_id is 'string | null', and user?.id || null is 'string | null'.
 
   // Insert payload
   const { error } = await supabase

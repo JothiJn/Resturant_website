@@ -15,6 +15,7 @@ export default function ContactPage() {
     date: "",
     details: ""
   });
+  const [enquiryType, setEnquiryType] = useState<EnquiryType>("General");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -29,8 +30,13 @@ export default function ContactPage() {
     data.append('phone', formData.phone);
     data.append('email', formData.email);
     data.append('event_type', enquiryType);
-    data.append('guests', formData.guests);
-    data.append('date', formData.date);
+    
+    // Provide default values for required database fields if they are missing (e.g. for "General" enquiry)
+    const guestsValue = formData.guests || "1";
+    const dateValue = formData.date || new Date().toISOString().split('T')[0];
+    
+    data.append('guests', guestsValue);
+    data.append('date', dateValue);
     data.append('details', formData.details);
 
     try {
