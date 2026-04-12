@@ -99,6 +99,45 @@ export type Database = {
         }
         Relationships: []
       }
+      menu_items: {
+        Row: {
+          allergens: Json | null
+          category: string
+          description: string
+          diet: Json | null
+          id: string
+          image: string
+          is_available: boolean
+          kcal: number
+          name: string
+          price: number
+        }
+        Insert: {
+          allergens?: Json | null
+          category: string
+          description: string
+          diet?: Json | null
+          id?: string
+          image: string
+          is_available?: boolean
+          kcal: number
+          name: string
+          price: number
+        }
+        Update: {
+          allergens?: Json | null
+          category?: string
+          description?: string
+          diet?: Json | null
+          id?: string
+          image?: string
+          is_available?: boolean
+          kcal?: number
+          name?: string
+          price?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
