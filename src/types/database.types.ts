@@ -1,0 +1,182 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  public: {
+    Tables: {
+      event_inquiries: {
+        Row: {
+          created_at: string
+          date: string
+          details: string | null
+          email: string
+          event_type: string
+          guests: number
+          id: string
+          name: string
+          phone: string
+          services_requested: Json | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          details?: string | null
+          email: string
+          event_type: string
+          guests: number
+          id?: string
+          name: string
+          phone: string
+          services_requested?: Json | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          details?: string | null
+          email?: string
+          event_type?: string
+          guests?: number
+          id?: string
+          name?: string
+          phone?: string
+          services_requested?: Json | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reservations: {
+        Row: {
+          created_at: string
+          date: string
+          email: string
+          guests: number
+          id: string
+          name: string
+          notes: string | null
+          occasion: string | null
+          phone: string
+          status: string
+          time: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          email: string
+          guests: number
+          id?: string
+          name: string
+          notes?: string | null
+          occasion?: string | null
+          phone: string
+          status?: string
+          time: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          email?: string
+          guests?: number
+          id?: string
+          name?: string
+          notes?: string | null
+          occasion?: string | null
+          phone?: string
+          status?: string
+          time?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      menu_items: {
+        Row: {
+          allergens: Json | null
+          category: string
+          description: string
+          diet: Json | null
+          id: string
+          image: string
+          is_available: boolean
+          kcal: number
+          name: string
+          price: number
+        }
+        Insert: {
+          allergens?: Json | null
+          category: string
+          description: string
+          diet?: Json | null
+          id?: string
+          image: string
+          is_available?: boolean
+          kcal: number
+          name: string
+          price: number
+        }
+        Update: {
+          allergens?: Json | null
+          category?: string
+          description?: string
+          diet?: Json | null
+          id?: string
+          image?: string
+          is_available?: boolean
+          kcal?: number
+          name?: string
+          price?: number
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type PublicSchema = Database[Extract<keyof Database, "public">]
+
+export type Tables<
+  PublicTableNameOrOptions extends
+    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
