@@ -15,6 +15,7 @@ export default function ContactPage() {
     date: "",
     details: ""
   });
+  const [enquiryType, setEnquiryType] = useState<EnquiryType>("General");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");

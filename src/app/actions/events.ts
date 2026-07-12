@@ -49,13 +49,13 @@ export async function createEventInquiry(formData: FormData) {
 
   // Extract clean Data
   const inserts = {
-    user_id: user?.id || null,
+    user_id: user?.id || '',
     name: xss(validatedFields.data.name),
     email: xss(validatedFields.data.email),
     phone: xss(validatedFields.data.phone),
     event_type: xss(validatedFields.data.event_type),
-    date: validatedFields.data.date,
-    guests: validatedFields.data.guests,
+    date: validatedFields.data.date || '',
+    guests: validatedFields.data.guests || 0,
     services_requested: validatedFields.data.services_requested ? validatedFields.data.services_requested.map(s => xss(s)) : null,
     details: validatedFields.data.details ? xss(validatedFields.data.details) : null,
     status: 'Pending'

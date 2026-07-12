@@ -53,14 +53,20 @@ export async function createMenuItem(formData: FormData) {
     category: formData.get('category') as string,
     diet: JSON.parse(formData.get('diet') as string || '[]'),
     image: formData.get('image') as string,
-    kcal: parseInt(formData.get('kcal') as string, 10) || null,
+    kcal: parseInt(formData.get('kcal') as string, 10) || 0,
     allergens: JSON.parse(formData.get('allergens') as string || '[]'),
     is_available: formData.get('is_available') === 'true'
   }
 
+  // Ensure kcal is always a number for Supabase
+  const itemToInsert = {
+    ...item,
+    kcal: item.kcal ?? 0
+  }
+
   const { data, error } = await supabase
     .from('menu_items')
-    .insert([item])
+    .insert([itemToInsert])
     .select()
 
   if (error) {
